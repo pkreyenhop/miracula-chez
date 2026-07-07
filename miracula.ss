@@ -1,4 +1,4 @@
-#!/usr/bin/env scheme
+#!/usr/bin/env chez
 (import (chezscheme))
 
 ;; =============================================================================
@@ -240,18 +240,18 @@
      (let ([v1 (whnf env (sub-node-e1 n))]
            [v2 (whnf env (sub-node-e2 n))])
        (if (and (int-node? v1) (int-node? v2))
-           (make-int-node (- (int-node-val v1) (int-node-val v2)))
+           (make-int-node (fx- (int-node-val v1) (int-node-val v2)))
            (error 'runtime "Subtraction expects integers")))]
     [(add-node? n)
      (let ([v1 (whnf env (add-node-e1 n))]
            [v2 (whnf env (add-node-e2 n))])
        (if (and (int-node? v1) (int-node? v2))
-           (make-int-node (+ (int-node-val v1) (int-node-val v2)))
+           (make-int-node (fx+ (int-node-val v1) (int-node-val v2)))
            (error 'runtime "Addition expects integers")))]
     [(ifzero-node? n)
      (let ([cond-val (whnf env (ifzero-node-cond n))])
        (if (int-node? cond-val)
-           (if (= (int-node-val cond-val) 0)
+           (if (fx= (int-node-val cond-val) 0)
                (whnf env (ifzero-node-t-branch n))
                (whnf env (ifzero-node-f-branch n)))
            (error 'runtime "Condition must resolve to an integer")))]
